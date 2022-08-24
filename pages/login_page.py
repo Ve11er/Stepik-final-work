@@ -1,5 +1,8 @@
 from .base_page import BasePage
 from .locators import LoginPageLocators
+from selenium import  webdriver
+import time
+
 
 
 class LoginPage(BasePage):
@@ -9,23 +12,18 @@ class LoginPage(BasePage):
         self.should_be_register_form()
 
     def should_be_login_url(self):
-        # реализуйте проверку на корректный url адрес
-        assert "/login" in self.browser.current_url, "login is absent in current url"
+        assert "login" in self.browser.current_url, "no login endpoint"
 
     def should_be_login_form(self):
-        # реализуйте проверку, что есть форма логина
-        assert self.is_element_present(*LoginPageLocators.LOGIN_FORM), "Login form is not presented"
+        assert self.is_element_present(*LoginPageLocators.LOGIN_FORM), "There is no login form"
 
     def should_be_register_form(self):
-        # реализуйте проверку, что есть форма регистрации на странице
-        assert self.is_element_present(*LoginPageLocators.REGISTER_FORM), "Register form is not presented"
+        assert self.is_element_present(*LoginPageLocators.REGISTER_FORM), "There is no register form"
 
-    def register_new_user(self, email, password):
-        email_field = self.browser.find_element(*LoginPageLocators.EMAIL_ADDRESS_FIELD)
-        email_field.send_keys(email)
-        password_field1 = self.browser.find_element(*LoginPageLocators.PASSWORD_FIELD)
-        password_field1.send_keys(password)
-        password_field2 = self.browser.find_element(*LoginPageLocators.CONFIRM_PASSWORD_FIELD)
-        password_field2.send_keys(password)
-        button_submit = self.browser.find_element(*LoginPageLocators.REGISTER_BUTTON)
-        button_submit.click()
+    def register_new_user(self):
+        password = str(time.time())
+        email = str(time.time()) + "@fakemail.org"
+        self.browser.find_element(*LoginPageLocators.EMAIL_INPUT).send_keys(email)
+        self.browser.find_element(*LoginPageLocators.REGISTRATION_PASSWORD1).send_keys(password)
+        self.browser.find_element(*LoginPageLocators.REGISTRATION_PASSWORD2).send_keys(password)
+        self.browser.find_element(*LoginPageLocators.SUBMIT_REGISTRATION_BUTTON).click()
